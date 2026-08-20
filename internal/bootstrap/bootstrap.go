@@ -4,6 +4,7 @@ package bootstrap
 import (
 	"math"
 	"math/rand"
+	"sort"
 )
 
 // ResidualBootstrap 残差自助法。
@@ -55,11 +56,10 @@ func StationaryBootstrap(data []float64, prob float64, rng *rand.Rand) []float64
 
 // ConfidenceInterval 计算 bootstrap 统计量的置信区间。
 func ConfidenceInterval(stats []float64, confidence float64) (lo, hi float64) {
-	copied := make([]float64, len(stats))
-	for i, v := range stats {
-		copied[len(stats)-1-i] = v
-	}
-	return quantileEnds(copied, confidence)
+	sorted := make([]float64, len(stats))
+	copy(sorted, stats)
+	sort.Float64s(sorted)
+	return quantileEnds(sorted, confidence)
 }
 
 // BootstrapMean 自助法估计均值的置信区间。
